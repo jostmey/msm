@@ -52,7 +52,7 @@ motif_size = 3
 cases = {}
 controls = {}
 
-# Load samples
+# Load immune repertoires
 #
 for path in glob.glob('dataset/*.tsv'):
   sample = path.split('/')[-1].split('.')[0]
@@ -96,11 +96,15 @@ samples_train, samples_val = ds.normalize_samples(samples_train, samples_val)
 # Assemble tensors
 ##########################################################################################
 
+# Convert numpy arrays to pytorch tensors
+#
 for sample in samples_train:
   sample['features'] = torch.from_numpy(sample['features']).cuda()
   sample['label'] = torch.tensor(sample['label']).cuda()
   sample['weight'] = torch.tensor(sample['weight']).cuda()
 
+# Convert numpy arrays to pytorch tensors
+#
 for sample in samples_val:
   sample['features'] = torch.from_numpy(sample['features']).cuda()
   sample['label'] = torch.tensor(sample['label']).cuda()
@@ -115,53 +119,64 @@ for sample in samples_val:
 num_features = samples_train[0]['features'].shape[1]
 num_fits = 2**17
 
-learning_rate = 0.01
-
 torch.manual_seed(args.seed)
 
-# Define max snippet model
+# Function for initializing the weights of the model
 #
 def init_weights():
   return torch.cat(
     [
-      0.5**0.5*torch.rand([ num_features-1, num_fits ])/(num_features-1.0)**0.5,
-      0.5**0.5*torch.rand([ 1, num_fits ])/(1.0)**0.5,
+      0.5**0.5*torch.rand([ num_features-1, num_fits ])/(num_features-1.0)**0.5,  # Weights for the Atchley factors
+      0.5**0.5*torch.rand([ 1, num_fits ])/(1.0)**0.5,  # Weight for the abundance term
     ],
     0
   )
 
+# Class defining the model
+#
 class MaxSnippetModel(torch.nn.Module):
   def __init__(self):
     super(MaxSnippetModel, self).__init__()
-    self.fc = torch.nn.Linear(num_features, num_fits)
+    self.linear = torch.nn.Linear(num_features, num_fits)
     with torch.no_grad():
-      self.fc.weights = init_weights()
+      self.linear.weights = init_weights()  # Initialize the weights
   def forward(self, x):
-    ls = self.fc(x)
+    ls = self.linear(x)
     ms, _ = torch.max(ls, axis=0)
     return ms
 
-# Create a max snippet model
+# Instantiation of the model
 #
 msm = MaxSnippetModel()
+
+# Turn on GPU acceleration
+#
 msm.cuda()
 
-# For fitting our model
+##########################################################################################
+# Metrics and optimization
+##########################################################################################
+
+# Settings
 #
-optimizer = torch.optim.Adam(msm.parameters(), lr=learning_rate) # Adam is based on gradient descent but better
+learning_rate = 0.01
+
+# Optimizer
+#
+optimizer = torch.optim.Adam(msm.parameters(), lr=learning_rate)  # Adam is based on gradient descent but better
 
 # Metrics
 #
-error = torch.nn.BCEWithLogitsLoss(reduction='none')
+loss = torch.nn.BCEWithLogitsLoss(reduction='none')  # The loss function is calculated seperately for each fit by sitting reduction to none
 
-def accuracy(ls_block, ys_block):
+def accuracy(ls_block, ys_block):  # The binary accuracy is calculated seperate for each fit
   a = torch.nn.Sigmoid()
   ps_block = a(ls_block)
   cs_block = (torch.round(ps_block) == torch.round(ys_block)).to(ys_block.dtype)
   return cs_block
 
 ##########################################################################################
-# Session
+# Fit and evaluate model
 ##########################################################################################
 
 # Settings
@@ -177,10 +192,12 @@ if args.restart is not None:
 #
 for epoch in range(0, num_epochs):
 
+  # Reset the gradients
+  #
   optimizer.zero_grad()
 
-  es_train = 0.0
-  as_train = 0.0
+  es_train = 0.0  # Cross-entropy error
+  as_train = 0.0  # Accuracy
 
   for sample in samples_train:
 
@@ -190,8 +207,8 @@ for epoch in range(0, num_epochs):
 
     ls_block = msm(xs_block)
 
-    es_block = w_block*error(ls_block, ys_block)
-    as_block = w_block*accuracy(ls_block, ys_block)
+    es_block = w_block*loss(ls_block, ys_block)  # The loss function is calculated seperately for each fit
+    as_block = w_block*accuracy(ls_block, ys_block)  # The binary accuracy is calculated seperate for each fit
 
     es_train += es_block
     as_train += as_block
@@ -214,8 +231,8 @@ for epoch in range(0, num_epochs):
 
       ls_block = msm(xs_block)
 
-      es_block = w_block*error(ls_block, ys_block)
-      as_block = w_block*accuracy(ls_block, ys_block)
+      es_block = w_block*error(ls_block, ys_block)  # The loss function is calculated seperately for each fit
+      as_block = w_block*accuracy(ls_block, ys_block)  # The binary accuracy is calculated seperate for each fit
 
       es_val += es_block
       as_val += as_block
