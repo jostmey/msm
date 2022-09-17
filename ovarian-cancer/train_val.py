@@ -167,7 +167,7 @@ optimizer = torch.optim.Adam(msm.parameters(), lr=learning_rate)  # Adam is base
 
 # Metrics
 #
-loss = torch.nn.BCEWithLogitsLoss(reduction='none')  # The loss function is calculated seperately for each fit by sitting reduction to none
+loss = torch.nn.BCEWithLogitsLoss(reduction='none')  # The loss function is calculated seperately for each fit by setting reduction to none
 
 def accuracy(ls_block, ys_block):  # The binary accuracy is calculated seperate for each fit
   a = torch.nn.Sigmoid()
