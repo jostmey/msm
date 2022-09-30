@@ -51,11 +51,9 @@ kmer_size = 3
 cases = {}
 controls = {}
 
-# Load samples from 20180417
+# Load immune repertoires
 #
-directory = 'dataset/'
-
-for path in glob.glob(directory+'*.tsv'):
+for path in glob.glob('dataset/*.tsv'):
   sample = path.split('/')[-1].split('.')[0]
   subject, label = sample.split('_')
   cdr3s = dp.load_cdr3s(path, min_length=kmer_size+trim_front+trim_rear, max_length=32)
