@@ -20,6 +20,7 @@ Within this repository, we present several examples implementing our method to i
 * [Python3](https://www.python.org/)
 * [PyTorch](https://pytorch.org//)
 * [NumPy](http://www.numpy.org/)
+* CUDA GPU
 * Linux Environment (Recommended)
 
 ## Download
