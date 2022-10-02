@@ -1,4 +1,4 @@
-# MSM
+# Max Snippet Model (Work in Progress) 
 
 ## Introduction
 
