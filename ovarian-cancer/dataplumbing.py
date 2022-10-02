@@ -43,33 +43,6 @@ def load_cdr3s(path_tsv, min_length=4, max_length=32, version='v2'):
           receptors[cdr3] += quantity
   return receptors
 
-def load_cdr3s_from_zip(path_zip, min_length=4, max_length=32, version='v2'):
-  receptors = {}
-  with zipfile.ZipFile(path_tsv, 'r') as stream_zip:
-    with stream_zip.open(stream_zip.namelist()[0], 'r') as stream_file:
-      with io.TextIOWrapper(stream_file, newline='') as stream_csv
-        reader = csv.DictReader(stream_csv, delimiter='\t')
-        for row in reader:
-          if version == 'v2':
-            cdr3 = row['aminoAcid']
-#            quantity = float(row['frequencyCount (%)'])
-            quantity = float(row['count (templates/reads)'])
-            status = row['sequenceStatus']
-          elif version == 'v3':
-            cdr3 = row['amino_acid']
-#            quantity = float(row['frequency'])
-            quantity = float(row['templates'])
-            status = row['frame_type']
-          else:
-            print('ERROR: Unsupported version')
-            exit()
-          if 'In' in status and min_length <= len(cdr3) and len(cdr3) <= max_length and quantity > 0.0 and 'X' not in cdr3:
-            if cdr3 not in receptors:
-              receptors[cdr3] = quantity
-            else:
-              receptors[cdr3] += quantity
-  return receptors
-
 def trim_cdr3s(receptors, trim_front=0, trim_rear=0):
   cdr3s = {}
   for cdr3, quantity in receptors.items():

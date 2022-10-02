@@ -2,7 +2,7 @@ mkdir -p bin
 
 # Split 1
 #
-python3 train_val.py --seed 1 --holdouts Patient1 --output bin/1 > bin/train_val.out
+python3 train_val.py --seed 1 --holdouts Patient1 --output bin/1 > bin/train_val_1.out
 
 # Split 2
 #
@@ -38,21 +38,21 @@ python3 train_val.py --seed 1 --holdouts Patient9 --output bin/9 > bin/train_val
 
 # Split 10
 #
-python3 train_val.py --seed 1 --holdouts Patient10 --output bin/10 > bin/train_val0.out
+python3 train_val.py --seed 1 --holdouts Patient10 --output bin/10 > bin/train_val_10.out
 
 # Split 11
 #
-python3 train_val.py --seed 1 --holdouts Patient11 --output bin/11 > bin/train_val1.out
+python3 train_val.py --seed 1 --holdouts Patient11 --output bin/11 > bin/train_val_11.out
 
 # Split 12
 #
-python3 train_val.py --seed 1 --holdouts Patient12 --output bin/12 > bin/train_val2.out
+python3 train_val.py --seed 1 --holdouts Patient12 --output bin/12 > bin/train_val_12.out
 
 # Split 13
 #
-python3 train_val.py --seed 1 --holdouts Patient13 --output bin/13 > bin/train_val3.out
+python3 train_val.py --seed 1 --holdouts Patient13 --output bin/13 > bin/train_val_13.out
 
 # Split 14
 #
-python3 train_val.py --seed 1 --holdouts Patient14 --output bin/14 > bin/train_val4.out
+python3 train_val.py --seed 1 --holdouts Patient14 --output bin/14 > bin/train_val_14.out
 
