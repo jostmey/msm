@@ -61,7 +61,7 @@ for path in glob.glob('dataset/*.tsv'):
   subject = path.split('/')[-1].split('.')[0]
   if 'BR' in subject:
     cases[subject] = kmers
-  elif 'HIP' in label:
+  elif 'HIP' in subject:
     controls[subject] = kmers
 
 ##########################################################################################
