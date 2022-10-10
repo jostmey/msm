@@ -206,6 +206,7 @@ for epoch in range(0, num_epochs):
     w_block = sample['weight']
 
     ls_block = msm(xs_block)
+    sample['predictions'] = torch.sigmoid(ls_block)
 
     es_block = w_block*loss(ls_block, ys_block)  # The loss function is calculated seperately for each fit
     as_block = w_block*accuracy(ls_block, ys_block)  # The binary accuracy is calculated seperate for each fit
@@ -230,6 +231,7 @@ for epoch in range(0, num_epochs):
       w_block = sample['weight']
 
       ls_block = msm(xs_block)
+      sample['predictions'] = torch.sigmoid(ls_block)
 
       es_block = w_block*loss(ls_block, ys_block)  # The loss function is calculated seperately for each fit
       as_block = w_block*accuracy(ls_block, ys_block)  # The binary accuracy is calculated seperate for each fit
@@ -239,18 +241,33 @@ for epoch in range(0, num_epochs):
 
   # Print report
   #
-  ln2 = 0.69314718056
   print(
-    epoch,
-    float(torch.mean(es_train))/ln2, 100.0*float(torch.mean(as_train)),
-    float(torch.mean(es_val))/ln2, 100.0*float(torch.mean(as_val)),
-    int(i_bestfit),
-    float(es_train[i_bestfit])/ln2, 100.0*float(as_train[i_bestfit]),
-    float(es_val[i_bestfit])/ln2, 100.0*float(as_val[i_bestfit]),
-    sep='\t', flush=True
+    'Epoch:', epoch,
+    'Accuracy (train):', round(100.0*float(as_train[i_bestfit]), 2), '%',
+    'Accuracy (val):', round(100.0*float(as_val[i_bestfit]), 2), '%',
+    flush=True
   )
+
+  if epoch%32 == 0:
+    ws = msm.linear.weights.detach().numpy()
+    bs = msm.linear.bias.detach().numpy()
+    np.savetxt(args.output+'_'+str(epoch)+'_ws.csv', ws[:,i_bestfit])
+    np.savetxt(args.output+'_'+str(epoch)+'_b.csv', bs[[i_bestfit]])
+    with open(args.output+'_'+str(epoch)+'_ms_train.csv', 'w') as stream:
+      print('Cross Entropy (bits)', 'Accuracy (%)', sep=',', file=stream)
+      print(float(es_train[i_bestfit])/np.log(2.0), 100.0*float(as_train[i_bestfit]), sep=',', file=stream)
+    with open(args.output+'_'+str(epoch)+'_ms_val.csv', 'w') as stream:
+      print('Cross Entropy (bits)', 'Accuracy (%)', sep=',', file=stream)
+      print(float(es_val[i_bestfit])/np.log(2.0), 100.0*float(as_val[i_bestfit]), sep=',', file=stream)
+    with open(args.output+'_'+str(epoch)+'_ps_train.csv', 'w') as stream:
+      print('Subject', 'Label', 'Weight', 'Prediction', sep=',', file=stream)
+      for sample in samples_train:
+        print(sample['subject'], float(sample['label']), float(sample['weight']), float(sample['predictions'][i_bestfit]), sep=',', file=stream)
+    with open(args.output+'_'+str(epoch)+'_ps_val.csv', 'w') as stream:
+      print('Subject', 'Label', 'Weight', 'Prediction', sep=',', file=stream)
+      for sample in samples_val:
+        print(sample['subject'], float(sample['label']), float(sample['weight']), float(sample['predictions'][i_bestfit]), sep=',', file=stream)
 
   optimizer.step()
 
 torch.save(msm, args.output+'_model.p')
-
