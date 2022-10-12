@@ -26,7 +26,7 @@ parser.add_argument('--holdouts', help='Holdout samples', type=str, nargs='+', r
 parser.add_argument('--restart', help='Basename for restart files', type=str, default=None)
 parser.add_argument('--output', help='Basename for output files', type=str, required=True)
 parser.add_argument('--seed', help='Seed value for randomly initializing fits', type=int, default=1)
-parser.add_argument('--gpu', help='GPU ID', type=int, default=0)
+parser.add_argument('--device', help='Device ID', type=str, default='cuda:0')
 args = parser.parse_args()
 
 ##########################################################################################
@@ -99,16 +99,16 @@ samples_train, samples_val = ds.normalize_samples(samples_train, samples_val)
 # Convert numpy arrays to pytorch tensors
 #
 for sample in samples_train:
-  sample['features'] = torch.from_numpy(sample['features']).cuda()
-  sample['label'] = torch.tensor(sample['label']).cuda()
-  sample['weight'] = torch.tensor(sample['weight']).cuda()
+  sample['features'] = torch.from_numpy(sample['features']).device(args.device)
+  sample['label'] = torch.tensor(sample['label']).device(args.device)
+  sample['weight'] = torch.tensor(sample['weight']).device(args.device)
 
 # Convert numpy arrays to pytorch tensors
 #
 for sample in samples_val:
-  sample['features'] = torch.from_numpy(sample['features']).cuda()
-  sample['label'] = torch.tensor(sample['label']).cuda()
-  sample['weight'] = torch.tensor(sample['weight']).cuda()
+  sample['features'] = torch.from_numpy(sample['features']).device(args.device)
+  sample['label'] = torch.tensor(sample['label']).device(args.device)
+  sample['weight'] = torch.tensor(sample['weight']).device(args.device)
 
 ##########################################################################################
 # Model
@@ -151,7 +151,7 @@ msm = MaxSnippetModel()
 
 # Turn on GPU acceleration
 #
-msm.cuda()
+msm.device(args.device)
 
 ##########################################################################################
 # Metrics and optimization
