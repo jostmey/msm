@@ -14,6 +14,7 @@ import csv
 import glob
 import dataplumbing as dp
 import dataset as ds
+import numpy as np
 import torch
 
 ##########################################################################################
@@ -89,19 +90,23 @@ samples_train, samples_val = ds.normalize_samples(samples_train, samples_val)
 # Assemble tensors
 ##########################################################################################
 
+# Settings
+#
+device = torch.device(args.device)
+
 # Convert numpy arrays to pytorch tensors
 #
 for sample in samples_train:
-  sample['features'] = torch.from_numpy(sample['features']).device(args.device)
-  sample['label'] = torch.tensor(sample['label']).device(args.device)
-  sample['weight'] = torch.tensor(sample['weight']).device(args.device)
+  sample['features'] = torch.from_numpy(sample['features']).to(device)
+  sample['label'] = torch.tensor(sample['label']).to(device)
+  sample['weight'] = torch.tensor(sample['weight']).to(device)
 
 # Convert numpy arrays to pytorch tensors
 #
 for sample in samples_val:
-  sample['features'] = torch.from_numpy(sample['features']).device(args.device)
-  sample['label'] = torch.tensor(sample['label']).device(args.device)
-  sample['weight'] = torch.tensor(sample['weight']).device(args.device)
+  sample['features'] = torch.from_numpy(sample['features']).to(device)
+  sample['label'] = torch.tensor(sample['label']).to(device)
+  sample['weight'] = torch.tensor(sample['weight']).to(device)
 
 ##########################################################################################
 # Model
@@ -144,7 +149,7 @@ msm = MaxSnippetModel()
 
 # Turn on GPU acceleration
 #
-msm.device(args.device)
+msm.to(device)
 
 ##########################################################################################
 # Metrics and optimization
