@@ -10,7 +10,6 @@
 ##########################################################################################
 
 import argparse
-import os
 import csv
 import glob
 import dataplumbing as dp
@@ -28,12 +27,6 @@ parser.add_argument('--output', help='Basename for output files', type=str, requ
 parser.add_argument('--seed', help='Seed value for randomly initializing fits', type=int, default=1)
 parser.add_argument('--device', help='Device ID', type=str, default='cuda:0')
 args = parser.parse_args()
-
-##########################################################################################
-# Environment
-##########################################################################################
-
-os.environ['CUDA_VISIBLE_DEVICES'] = str(args.gpu)
 
 ##########################################################################################
 # Assemble sequences
