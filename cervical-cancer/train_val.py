@@ -10,11 +10,11 @@
 ##########################################################################################
 
 import argparse
-import os
 import csv
 import glob
 import dataplumbing as dp
 import dataset as ds
+import numpy as np
 import torch
 
 ##########################################################################################
@@ -26,14 +26,9 @@ parser.add_argument('--holdouts', help='Holdout samples', type=str, nargs='+', r
 parser.add_argument('--restart', help='Basename for restart files', type=str, default=None)
 parser.add_argument('--output', help='Basename for output files', type=str, required=True)
 parser.add_argument('--seed', help='Seed value for randomly initializing fits', type=int, default=1)
-parser.add_argument('--gpu', help='GPU ID', type=int, default=0)
+parser.add_argument('--device', help='Examples are cuda:0 or cpu', type=str, default='cuda:0')
+parser.add_argument('--num_fits', help='Number of fits to the training data', type=int, default=2**17)
 args = parser.parse_args()
-
-##########################################################################################
-# Environment
-##########################################################################################
-
-os.environ['CUDA_VISIBLE_DEVICES'] = str(args.gpu)
 
 ##########################################################################################
 # Assemble sequences
@@ -123,19 +118,23 @@ samples_train, samples_val = ds.normalize_samples(samples_train, samples_val)
 # Assemble tensors
 ##########################################################################################
 
+# Settings
+#
+device = torch.device(args.device)
+
 # Convert numpy arrays to pytorch tensors
 #
 for sample in samples_train:
-  sample['features'] = torch.from_numpy(sample['features']).cuda()
-  sample['label'] = torch.tensor(sample['label']).cuda()
-  sample['weight'] = torch.tensor(sample['weight']).cuda()
+  sample['features'] = torch.from_numpy(sample['features']).to(device)
+  sample['label'] = torch.tensor(sample['label']).to(device)
+  sample['weight'] = torch.tensor(sample['weight']).to(device)
 
 # Convert numpy arrays to pytorch tensors
 #
 for sample in samples_val:
-  sample['features'] = torch.from_numpy(sample['features']).cuda()
-  sample['label'] = torch.tensor(sample['label']).cuda()
-  sample['weight'] = torch.tensor(sample['weight']).cuda()
+  sample['features'] = torch.from_numpy(sample['features']).to(device)
+  sample['label'] = torch.tensor(sample['label']).to(device)
+  sample['weight'] = torch.tensor(sample['weight']).to(device)
 
 ##########################################################################################
 # Model
@@ -144,7 +143,7 @@ for sample in samples_val:
 # Settings
 #
 num_features = samples_train[0]['features'].shape[1]
-num_fits = 2**17
+num_fits = args.num_fits
 
 torch.manual_seed(args.seed)
 
@@ -178,7 +177,7 @@ msm = MaxSnippetModel()
 
 # Turn on GPU acceleration
 #
-msm.cuda()
+msm.to(device)
 
 ##########################################################################################
 # Metrics and optimization
@@ -233,6 +232,7 @@ for epoch in range(0, num_epochs):
     w_block = sample['weight']
 
     ls_block = msm(xs_block)
+    sample['predictions'] = torch.sigmoid(ls_block)
 
     es_block = w_block*loss(ls_block, ys_block)  # The loss function is calculated seperately for each fit
     as_block = w_block*accuracy(ls_block, ys_block)  # The binary accuracy is calculated seperate for each fit
@@ -243,7 +243,7 @@ for epoch in range(0, num_epochs):
     e_block = torch.sum(es_block)
     e_block.backward()
 
-  i_bestfit = torch.argmin(es_train)
+  i_bestfit = torch.argmin(es_train)  # Very important index selects the best fit to the training data
 
   es_val = 0.0
   as_val = 0.0
@@ -257,6 +257,7 @@ for epoch in range(0, num_epochs):
       w_block = sample['weight']
 
       ls_block = msm(xs_block)
+      sample['predictions'] = torch.sigmoid(ls_block)
 
       es_block = w_block*loss(ls_block, ys_block)  # The loss function is calculated seperately for each fit
       as_block = w_block*accuracy(ls_block, ys_block)  # The binary accuracy is calculated seperate for each fit
@@ -266,18 +267,35 @@ for epoch in range(0, num_epochs):
 
   # Print report
   #
-  ln2 = 0.69314718056
   print(
-    epoch,
-    float(torch.mean(es_train))/ln2, 100.0*float(torch.mean(as_train)),
-    float(torch.mean(es_val))/ln2, 100.0*float(torch.mean(as_val)),
-    int(i_bestfit),
-    float(es_train[i_bestfit])/ln2, 100.0*float(as_train[i_bestfit]),
-    float(es_val[i_bestfit])/ln2, 100.0*float(as_val[i_bestfit]),
-    sep='\t', flush=True
+    'Epoch:', epoch,
+    'Accuracy (train):', round(100.0*float(as_train[i_bestfit]), 2), '%',
+    'Accuracy (val):', round(100.0*float(as_val[i_bestfit]), 2), '%',
+    flush=True
   )
+
+  # Save parameters and results from the best fit to the training data
+  #
+  if epoch%32 == 0:
+    ws = msm.linear.weights.detach().numpy()
+    bs = msm.linear.bias.detach().numpy()
+    np.savetxt(args.output+'_'+str(epoch)+'_ws.csv', ws[:,i_bestfit])
+    np.savetxt(args.output+'_'+str(epoch)+'_b.csv', bs[[i_bestfit]])
+    with open(args.output+'_'+str(epoch)+'_ms_train.csv', 'w') as stream:
+      print('Cross Entropy (bits)', 'Accuracy (%)', sep=',', file=stream)
+      print(float(es_train[i_bestfit])/np.log(2.0), 100.0*float(as_train[i_bestfit]), sep=',', file=stream)
+    with open(args.output+'_'+str(epoch)+'_ms_val.csv', 'w') as stream:
+      print('Cross Entropy (bits)', 'Accuracy (%)', sep=',', file=stream)
+      print(float(es_val[i_bestfit])/np.log(2.0), 100.0*float(as_val[i_bestfit]), sep=',', file=stream)
+    with open(args.output+'_'+str(epoch)+'_ps_train.csv', 'w') as stream:
+      print('Subject', 'Label', 'Weight', 'Prediction', sep=',', file=stream)
+      for sample in samples_train:
+        print(sample['subject'], float(sample['label']), float(sample['weight']), float(sample['predictions'][i_bestfit]), sep=',', file=stream)
+    with open(args.output+'_'+str(epoch)+'_ps_val.csv', 'w') as stream:
+      print('Subject', 'Label', 'Weight', 'Prediction', sep=',', file=stream)
+      for sample in samples_val:
+        print(sample['subject'], float(sample['label']), float(sample['weight']), float(sample['predictions'][i_bestfit]), sep=',', file=stream)
 
   optimizer.step()
 
 torch.save(msm, args.output+'_model.p')
-
