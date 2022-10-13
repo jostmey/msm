@@ -1,7 +1,6 @@
 # Max Snippet Model (Work in Progress) 
 
 ## Introduction
-
 The full set of T cell receptors in an individual contain traces of past and current immune responses. These traces can serve as biomarkers for diseases mediated by the immune system (e.g. infectious disease, autoimmune disease, cancer). Technological advancements now allow us to sequence T cell receptors from patients. However, only a handful of sequenced T cell receptors from a patient are expected to contain traces relevant to a specific disease. Here we present the latest source code for our method for elucidating these traces.
 
 To determine where to find these traces in the T cell receptor sequences, we had previously analyzed 3D X-ray crystallographic structures of T-cell receptors bound to antigen (disease particles). We observed a contiguous strip typically 4 amino acid residues from complimentary determining region 3 (CDR3) lying in direct contact with each antigen. In addition, the first and last three amino acid residues from each CDR3 are not observed to contact antigen. Based on this observation, we discard the first and last three amino acid residues and extract every possible 4-residue long strip from every CDR3 of a T cell receptor sequence. We call these 4-residue strips snippets. To represent each amino acid residue in the snippet, we use Atchley numbers. There are 5 Atchley numbers for each amino acid residue. The Atchley numbers describe biochemical properties of each amino acid residue. Because there are 4 residues in a snippet and 5 Atchley numbers per snippet, we can represent each snippet using 20 Atchley numbers. The number of times a snippet is observed is another important factor for elucidating traces of past and ongoing immune responses. This is because T cells participating in an iummune response can proliferate potentially creating many copies of a relevant snippet. To quantify the number of copies of each snippet, we take the log of its relative abundance. The relative abundance is calculated as the number of times that same snippet is observed divided by the total number of all snippets. This measurement is included alongside the 20 Atchley numbers for a total of 21 numbers.
@@ -15,7 +14,6 @@ A gradient optimization (a.k.a. gradient or steepest descent) based method is us
 Within this repository, we present several examples implementing our method to identify immune traces that can serve as biomarkers. Each example is self-contained with the associated datasets required to re-run the model. Our examples highlight how our method can be used to diagnose cancer from peripheral blood, distinguish tumor from healthy tissue, and provide examples of where our method failed.
 
 ## Requirements
-
 * [Python3](https://www.python.org/)
 * [PyTorch](https://pytorch.org//)
 * [NumPy](http://www.numpy.org/)
@@ -23,6 +21,5 @@ Within this repository, we present several examples implementing our method to i
 * Linux Environment (Recommended)
 
 ## Download
-
 * Download: [zip](https://github.com/jostmey/MSM/zipball/master)
 * Git: `git clone https://github.com/jostmey/MSM`
