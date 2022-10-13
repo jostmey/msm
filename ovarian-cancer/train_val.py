@@ -27,6 +27,7 @@ parser.add_argument('--restart', help='Basename for restart files', type=str, de
 parser.add_argument('--output', help='Basename for output files', type=str, required=True)
 parser.add_argument('--seed', help='Seed value for randomly initializing fits', type=int, default=1)
 parser.add_argument('--device', help='Device ID', type=str, default='cuda:0')
+parser.add_argument('--num_fits' help='Number of fits to the training data', type=int, default=2**17)
 args = parser.parse_args()
 
 ##########################################################################################
@@ -115,7 +116,7 @@ for sample in samples_val:
 # Settings
 #
 num_features = samples_train[0]['features'].shape[1]
-num_fits = 2**17
+num_fits = args.num_fits
 
 torch.manual_seed(args.seed)
 
