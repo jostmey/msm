@@ -1,5 +1,6 @@
 # Instructions
 This example illustrates how our method can be used to predict if an ovarian tissue is either “normal” or “malignant”. Each tissue sample is from a different person.
+
 ## Dataset
 T cell receptors sequenced from 20 ovarian tissue samples are in the folder `dataset`. Use the following commands to extract the data.
 ```
@@ -7,6 +8,7 @@ cd dataset
 unzip '*.zip'
 cd ../
 ```
+
 ## Modelling
 The model uses snippets from the T cell receptor sequences from ovarian tissue to predict if the tissue is “malignant” or “normal”. The model is trained by fitting it to data from 19 individuals. Data from the 20th individual is used as a holdout to evaluate how the model performs on an individual not used for fitting. Every individual gets a turn as the holdout.  Use the following commands to fit the model. The commands assume you are running the model on a CUDA enabled GPU with at least 11GB of memory.
 ```
