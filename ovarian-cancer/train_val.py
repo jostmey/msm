@@ -27,7 +27,7 @@ parser.add_argument('--restart', help='Basename for restart files', type=str, de
 parser.add_argument('--output', help='Basename for output files', type=str, required=True)
 parser.add_argument('--seed', help='Seed value for randomly initializing fits', type=int, default=1)
 parser.add_argument('--device', help='Examples are cuda:0 or cpu', type=str, default='cuda:0')
-parser.add_argument('--num_fits' help='Number of fits to the training data', type=int, default=2**17)
+parser.add_argument('--num_fits', help='Number of fits to the training data', type=int, default=2**17)
 args = parser.parse_args()
 
 ##########################################################################################
