@@ -8,7 +8,7 @@ unzip '*.zip'
 cd ../
 ```
 ## Modelling
-The model uses snippets from the T cell receptor sequences from ovarian tissue to predict if the tissue is “malignant” or “normal”. The model is trained by fitting it to data from 19 individuals. Data from the 20th individual is used as a holdout to evaluate how the model performs on an individual not used for fitting. Every individual gets a turn as the holdout.  Use the following commands to fit the model.
+The model uses snippets from the T cell receptor sequences from ovarian tissue to predict if the tissue is “malignant” or “normal”. The model is trained by fitting it to data from 19 individuals. Data from the 20th individual is used as a holdout to evaluate how the model performs on an individual not used for fitting. Every individual gets a turn as the holdout.  Use the following commands to fit the model. The commands assume you are running the model on a CUDA enabled GPU with at least 11GB of memory.
 ```
 mkdir -p bin
 python3 train_val.py --seed 1 --holdouts O-10M --output bin/1
@@ -32,4 +32,4 @@ python3 train_val.py --seed 1 --holdouts O-8N --output bin/18
 python3 train_val.py --seed 1 --holdouts O-9M --output bin/19
 python3 train_val.py --seed 1 --holdouts O-9N --output bin/20
 ```
-The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flat `--holdouts` refers to the sample being used as the holdout. The third flag `--output` is the prefix for the filenames that are saved while the model is being fitted.
+The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flat `--holdouts` refers to the sample being used as the holdout. The third flag `--output` is the prefix for the filenames that are saved while the model is being fitted. Additional flags are `--num_fits` indicating the number of times to fit the training data in an attempt to find the global best fit to the training data and `--device` for selecting GPU or CPU.
