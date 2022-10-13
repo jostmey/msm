@@ -32,4 +32,4 @@ python3 train_val.py --seed 1 --holdouts O-8N --output bin/18
 python3 train_val.py --seed 1 --holdouts O-9M --output bin/19
 python3 train_val.py --seed 1 --holdouts O-9N --output bin/20
 ```
-The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flat `--holdouts` refers to the sample being used as the holdout. The third flag `-- output` is the prefix for the filenames that are saved while the model is being fitted.
+The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flat `--holdouts` refers to the sample being used as the holdout. The third flag `--output` is the prefix for the filenames that are saved while the model is being fitted.
