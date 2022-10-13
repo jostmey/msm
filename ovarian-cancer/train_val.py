@@ -216,7 +216,7 @@ for epoch in range(0, num_epochs):
     e_block = torch.sum(es_block)
     e_block.backward()
 
-  i_bestfit = torch.argmin(es_train)
+  i_bestfit = torch.argmin(es_train)  # Very important index selects the best fit to the training data
 
   es_val = 0.0
   as_val = 0.0
@@ -247,6 +247,8 @@ for epoch in range(0, num_epochs):
     flush=True
   )
 
+  # Save parameters and results from the best fit to the training data
+  #
   if epoch%32 == 0:
     ws = msm.linear.weights.detach().numpy()
     bs = msm.linear.bias.detach().numpy()
