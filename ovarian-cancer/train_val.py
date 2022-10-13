@@ -26,7 +26,7 @@ parser.add_argument('--holdouts', help='Holdout samples', type=str, nargs='+', r
 parser.add_argument('--restart', help='Basename for restart files', type=str, default=None)
 parser.add_argument('--output', help='Basename for output files', type=str, required=True)
 parser.add_argument('--seed', help='Seed value for randomly initializing fits', type=int, default=1)
-parser.add_argument('--device', help='Device ID', type=str, default='cuda:0')
+parser.add_argument('--device', help='Examples are cuda:0 or cpu', type=str, default='cuda:0')
 parser.add_argument('--num_fits' help='Number of fits to the training data', type=int, default=2**17)
 args = parser.parse_args()
 
