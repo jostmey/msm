@@ -39,8 +39,7 @@ args = parser.parse_args()
 trim_front = 3
 trim_rear = 3
 
-window_size = 4
-motif_size = 3
+kmer_size = 4
 
 # To hold sequences from each subject
 #
@@ -278,9 +277,9 @@ for epoch in range(0, num_epochs):
   #
   if epoch%32 == 0:
     ws = msm.linear.weights.detach().numpy()
-    bs = msm.linear.bias.detach().numpy()
+    bs = msm.linear.bias.cpu().detach().numpy()
     np.savetxt(args.output+'_'+str(epoch)+'_ws.csv', ws[:,i_bestfit])
-    np.savetxt(args.output+'_'+str(epoch)+'_b.csv', bs[[i_bestfit]])
+    np.savetxt(args.output+'_'+str(epoch)+'_b.csv', bs[[i_bestfit.cpu()]])
     with open(args.output+'_'+str(epoch)+'_ms_train.csv', 'w') as stream:
       print('Cross Entropy (bits)', 'Accuracy (%)', sep=',', file=stream)
       print(float(es_train[i_bestfit])/np.log(2.0), 100.0*float(as_train[i_bestfit]), sep=',', file=stream)
