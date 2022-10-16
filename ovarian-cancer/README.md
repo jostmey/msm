@@ -9,7 +9,7 @@ unzip '*.zip'
 cd ../
 ```
 
-## Modelling
+## Modeling
 This model uses snippets from the T cell receptor sequences from ovarian tissue to predict if the tissue is normal or malignant. The model is fit on data from many individuals. The performance of the model is evaluated using a patient-holdout cross-validation. During the cross-validation, data from an individual is held out during the fitting procedure. That individual is then used to determine how the model performs on an individual not used for fitting. Every individual gets a turn being held out, which is why we must fit the model anew each time an individual is held out. Use the following commands to run the cross-validation. The commands assume you are running the model on a CUDA enabled GPU with at least 11GB of memory.
 ```
 mkdir -p bin
@@ -35,6 +35,9 @@ python3 train_val.py --seed 1 --holdouts O-9M --output bin/19
 python3 train_val.py --seed 1 --holdouts O-9N --output bin/20
 ```
 The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --output is the prefix for the filenames saved during the fitting procedure. Additional flags that can be used are --num_fits for determining how many times to try and find the global best fit to the training data and --device for selecting GPU or CPU.
+
+## Model Customization
+This model introduces the use of a gap in the snippet. Gaps are a concept from sequence alignment algorithms that allow spaces to be introduced between individual amino acid residues. The code for the gaps can be found on line 71 in `dataplumbing.py` and is used on line 58 in `train_val.py`. The value `motif_size` determines the number of amino acid residues in the snippet and the difference between `window_size` and `motif_size` determines the number of gaps.
 
 ## Evaluation
 After running each above command and completing the patient-holdout cross-validation, the results can be summarized using the following command.
