@@ -66,3 +66,8 @@ The results are stored in a CSV file that can be opened by your favorite spreads
 7.	The true negative rate (specificity) on the holdout data averaged over the cross-validation.
 8.	The true positive rate (sensitivity) on the holdout data averaged over the cross-validation.
 9.	The cross-entropy on the holdout data averaged over the cross-validation.
+
+## Publications
+* [Source of Healthy Control Samples](https://www.nature.com/articles/ng.3822)
+* [Source of Breast Cancer Samples](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5715779/)
+* [Original Breast Cancer Model](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6445742/)
