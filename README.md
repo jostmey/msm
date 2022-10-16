@@ -11,7 +11,11 @@ The weights and bias values are selected such that the model assigns an individu
 
 A gradient optimization (a.k.a. gradient or steepest descent) based method is used to fit the weights and bias values. We observe gradient optimization frequently becoming stuck in a local optimum. Therefore, we fit many thousands of replicas of the model and pick the model that has the best fit to the training data. This attempts to select the global best optimum among many local optimums. To make efficient use of GPU cards, we coded the optimization procedure to fit many replicas in parallel. After identifying the best optimum, the associated weights and bias are used to score snippets from a holdout individual. We observe that the model will not perform well on holdouts unless we attempt to find the global optimum.
 
-Within this repository, we present several examples implementing our method to identify immune traces that can serve as biomarkers. Each example is self-contained with the associated datasets required to re-run the model. Our examples highlight how our method can be used to diagnose cancer from peripheral blood, distinguish tumor from healthy tissue, and provide examples of where our method failed.
+Within this repository, we present several examples implementing our method to identify immune traces that can serve as biomarkers. Each example is self-contained with the associated datasets required to re-run the model. Our examples:
+* [distinguish malignant from non-malignant ovarian tissue](ovarian-cancer),
+* [diagnose breast cancer from peripheral blood](breast-cancer),
+* [predict clearance of preneoplastic cervical lesions](cervical-cancer),
+* [and provide an example where our code performed poorly.](colorectal-cancer)
 
 ## Publications
 * [Cervical Cancer Screening](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8050337/)
