@@ -27,5 +27,5 @@ Within this repository, we present several examples implementing our method to i
 * Linux Environment (Recommended)
 
 ## Download
-* Download: [zip](https://github.com/jostmey/MSM/zipball/master)
-* Git: `git clone https://github.com/jostmey/MSM`
+* Download: [zip](https://github.com/jostmey/msm/zipball/master)
+* Git: `git clone https://github.com/jostmey/msm`
