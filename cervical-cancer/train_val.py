@@ -39,8 +39,7 @@ args = parser.parse_args()
 trim_front = 3
 trim_rear = 3
 
-window_size = 4
-motif_size = 3
+kmer_size = 4
 
 # To hold sequences from each subject
 #
