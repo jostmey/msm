@@ -14,10 +14,10 @@ A gradient optimization (a.k.a. gradient or steepest descent) based method is us
 Within this repository, we present several examples implementing our method to identify immune traces that can serve as biomarkers. Each example is self-contained with the associated datasets required to re-run the model. Our examples highlight how our method can be used to diagnose cancer from peripheral blood, distinguish tumor from healthy tissue, and provide examples of where our method failed.
 
 ## Publications
-* Cervical Cancer Screening: https://doi.org/10.3389/fimmu.2021.624230
-* Ovarian Cancer: https://doi.org/10.1158/0008-5472.CAN-18-2292
-* Breast and Colorectal Cancer: https://doi.org/10.1371/journal.pone.0229569
-* Multiple Sclerosis: https://doi.org/10.1186/s12859-017-1814-6
+* [Cervical Cancer Screening](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8050337/)
+* [Ovarian Cancer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7058380/)
+* [Breast and Colorectal Cancer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6445742/)
+* [Multiple Sclerosis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5588725/)
 
 ## Requirements
 * [Python3](https://www.python.org/)
