@@ -35,6 +35,5 @@ Within this repository, we present several examples implementing our method to i
 * Git: `git clone https://github.com/jostmey/msm`
 
 ## To Do
-* Change-log of modifications of each model from the original publication
+* Change-log of modifications of each model from the original publication (point out where we get identical performance)
 * Code to extract top scoring 4mers
-* 
