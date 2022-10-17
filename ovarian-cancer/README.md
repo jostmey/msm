@@ -34,7 +34,7 @@ python3 train_val.py --seed 1 --holdouts O-8N --output bin/18
 python3 train_val.py --seed 1 --holdouts O-9M --output bin/19
 python3 train_val.py --seed 1 --holdouts O-9N --output bin/20
 ```
-The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --output is the prefix for the filenames saved during the fitting procedure. Additional flags that can be used are --num_fits for determining how many times to try and find the global best fit to the training data and --device for selecting GPU or CPU.
+The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --output is the prefix for the filenames saved during the fitting procedure. Additional flags that can be used are --num_fits for determining how many times to try and find the global best fit to the training data and --device for selecting `gpu` or `cpu`.
 
 ## Model Customization
 This model introduces the use of a gap in the snippet, which was found to improve performance on this dataset. Gaps are a concept from sequence alignment algorithms that allow spaces to be introduced between individual amino acid residues. The code for the gaps can be found on line 71 in `dataplumbing.py` and is used on line 58 in `train_val.py`. The value `motif_size` determines the number of amino acid residues in the snippet and the difference between `window_size` and `motif_size` determines the number of gaps.

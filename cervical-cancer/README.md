@@ -38,7 +38,7 @@ python3 train_val.py --seed 1 --holdouts 112015051_3_32 --output bin/22
 python3 train_val.py --seed 1 --holdouts 112015051_5_35 --output bin/23
 python3 train_val.py --seed 1 --holdouts 4-11_DNA --output bin/24
 ```
-The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --output is the prefix for the filenames saved during the fitting procedure. Additional flags that can be used are --num_fits for determining how many times to try and find the global best fit to the training data and --device for selecting GPU or CPU.
+The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --output is the prefix for the filenames saved during the fitting procedure. Additional flags that can be used are --num_fits for determining how many times to try and find the global best fit to the training data and --device for selecting `gpu` or `cpu`.
 
 ## Model Customization
 Patient's that regress are expected to have T cells that can recognize their precancerous lesions whereas patient's that progress or remain the same are expected to lack T cells that can recognize their precancerous lesions. Therefore, each "regress" is treated as a cases and each "progress/same" is treated as a control.
