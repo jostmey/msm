@@ -33,3 +33,8 @@ Within this repository, we present several examples implementing our method to i
 ## Download
 * Download: [zip](https://github.com/jostmey/msm/zipball/master)
 * Git: `git clone https://github.com/jostmey/msm`
+
+## To Do
+* Change-log of modifications of each model from the original publication
+* Code to extract top scoring 4mers
+* 
