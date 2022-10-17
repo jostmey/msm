@@ -37,3 +37,4 @@ Within this repository, we present several examples implementing our method to i
 ## To Do
 * Change-log of modifications of each model from the original publication (point out where we get identical performance)
 * Code to extract top scoring 4mers
+* Rename folders to indicate tissue/blood and published/not
