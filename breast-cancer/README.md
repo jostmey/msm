@@ -46,7 +46,7 @@ python3 train_val.py --seed 1 --holdouts HIP14045 --num_fits 16384 --output bin/
 python3 train_val.py --seed 1 --holdouts HIP14055 --num_fits 16384 --output bin/31
 python3 train_val.py --seed 1 --holdouts HIP14221 --num_fits 16384 --output bin/32
 ```
-The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --num_fits determines how many times to try and find the global best fit to the training data and has been reduced to allow the larger samples to fit into GPU memory. The fourth flag --output is the prefix for the filenames saved during the fitting procedure. An additional flag that can be used is --device for selecting GPU or CPU.
+The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --num_fits determines how many times to try and find the global best fit to the training data and has been reduced to allow the larger samples to fit into GPU memory. The fourth flag --output is the prefix for the filenames saved during the fitting procedure. An additional flag that can be used is --device for selecting `gpu` or `cpu`.
 
 ## Model Customization
 This dataset combines individuals from two studies. The first study contains healthy individuals. The second study contains individuals with breast cancer. Healthy individuals were selected to be age and sex matched. 
