@@ -83,7 +83,7 @@ for sample, label in samples.items():
   cdr3s = dp.trim_cdr3s(cdr3s, trim_front=trim_front, trim_rear=trim_rear)
   kmers = dp.cdr3s_to_kmers(cdr3s, kmer_size)
   kmers = dp.normalize_sample(kmers)
-  if 'regress' in cases:
+  if 'regress' in label:
     cases[sample] = kmers
   else:
     controls[sample] = kmers
