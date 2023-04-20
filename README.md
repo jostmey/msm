@@ -35,6 +35,7 @@ In this repository, we present several examples illustrating our method for iden
 * Git: `git clone https://github.com/jostmey/msm`
 
 ## To Do
+* Bugs in code preventing replication of all published results (some results replicated, some not)
 * Change-log of modifications of each model from the original publication (point out where we get identical performance)
 * Code to extract top scoring 4mers
 * Rename folders to indicate tissue/blood and published/not
