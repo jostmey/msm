@@ -30,8 +30,6 @@ python3 train_val.py --seed 1 --holdouts Patient14 --output bin/14
 ```
 The first flag, --seed, sets the seed value for generating the initial guess of the weight values. The second flag, --holdouts, specifies which sample to hold out. The third flag, --output, defines the prefix for filenames saved during the fitting process. Additional flags include --num_fits, which determines the number of attempts to find the global best fit for the training data, and --device, which allows for the selection of either gpu or cpu.
 
-## Model Customization
-
 ## Evaluation
 Upon executing each of the aforementioned commands and completing the patient-holdout cross-validation, you can consolidate the results using the command provided below.
 ```
