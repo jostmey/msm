@@ -1,8 +1,8 @@
 # Instructions
-This example illustrates how our method can be used to predict the regression of preneoplastic cervical lesions resulting from HPV. The spontaneous regression of preneoplastic cervical lesions is good because it would suggest the individual's immune system can naturally clear these precancerous lesions. Samples are either "regress" or "progress/same". Each sample is from a different person.
+This example demonstrates the application of our method for predicting the regression of preneoplastic cervical lesions caused by HPV. Spontaneous regression of these lesions is favorable, as it suggests the individual's immune system can naturally eliminate these precancerous growths. The samples are categorized as either "regress" or "progress/same," with each sample originating from a distinct individual.
 
 ## Dataset
-T cell receptors sequenced from 24 cervical samples are in the folder `dataset`. Six samples are "progress/same" and eighteen samples are "regress". Use the following commands to extract the data.
+The dataset folder contains T cell receptor sequences from 24 cervical samples, with six samples labeled as "progress/same" and eighteen as "regress". To extract the data, use the commands provided below.
 ```
 cd dataset
 unzip '*.zip'
@@ -10,7 +10,7 @@ cd ../
 ```
 
 ## Modeling
-This model uses snippets from the T cell receptor sequences from ovarian tissue to predict if the tissue is "progress/same" or "regress". The model is fit on data from many individuals. The performance of the model is evaluated using a patient-holdout cross-validation. During the cross-validation, data from an individual is held out during the fitting procedure. That individual is then used to determine how the model performs on an individual not used for fitting. Every individual gets a turn being held out, which is why we must fit the model anew each time an individual is held out. Use the following commands to run the cross-validation. The commands assume you are running the model on a CUDA enabled GPU with at least 11GB of memory.
+This model employs snippets derived from T cell receptor sequences in ovarian tissue to predict whether the tissue is "progress/same" or "regress". The model is trained on data from numerous individuals, and its performance is assessed through patient-holdout cross-validation. During the cross-validation process, data from a single individual is withheld during the fitting procedure, and subsequently used to evaluate the model's performance on data not included in the fitting. Each individual takes a turn as the holdout, necessitating the model to be refit each time a different individual is held out. To execute the cross-validation, use the following commands, which assume you are running the model on a CUDA-enabled GPU with a minimum of 11GB memo.
 ```
 mkdir -p bin
 python3 train_val.py --seed 1 --holdouts 112015051_3_38 --output bin/1
@@ -38,13 +38,13 @@ python3 train_val.py --seed 1 --holdouts 112015051_3_32 --output bin/22
 python3 train_val.py --seed 1 --holdouts 112015051_5_35 --output bin/23
 python3 train_val.py --seed 1 --holdouts 4-11_DNA --output bin/24
 ```
-The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --output is the prefix for the filenames saved during the fitting procedure. Additional flags that can be used are --num_fits for determining how many times to try and find the global best fit to the training data and --device for selecting `gpu` or `cpu`.
+The first flag --seed sets the seed value for generating the initial guess of the weight values. The second flag --holdouts specifies the sample to be held out. The third flag --output designates the prefix for filenames saved during the fitting procedure. Optional flags include --num_fits, which determines the number of attempts to find the global best fit for the training data, and --device, which allows the selection of either gpu or cpu for processing.
 
-## Model Customization
-Patient's that regress are expected to have T cells that can recognize their precancerous lesions whereas patient's that progress or remain the same are expected to lack T cells that can recognize their precancerous lesions. Therefore, each "regress" is treated as a cases and each "progress/same" is treated as a control.
+## How does this differ from the other examples in this repository?
+Patients who experience regression are expected to have T cells capable of recognizing their precancerous lesions, while patients who show progression or remain the same are likely lacking T cells that can detect these lesions. Consequently, each "regress" is treated as a case, and each "progress/same" is considered a control. 
 
 ## Evaluation
-After running each above command and completing the patient-holdout cross-validation, the results can be summarized using the following command.
+Upon executing each of the aforementioned commands and completing the patient-holdout cross-validation, you can consolidate the results using the command provided below.
 ```
 python3 report.py > report.csv
 ```
