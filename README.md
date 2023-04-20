@@ -11,7 +11,7 @@ The weights and bias values are chosen to ensure that the model assigns a probab
 
 We employ a gradient optimization method, based on gradient or steepest descent, to fit the weights and bias values. We often observe gradient optimization getting trapped in local optima. To address this issue, we fit thousands of model replicas and select the one with the best fit to the training data, aiming to identify the global optimum among numerous local optima. To efficiently utilize GPU cards, we have coded the optimization procedure to fit multiple replicas in parallel. After determining the best optimum, the corresponding weights and bias values are used to score snippets from a holdout individual. We note that the model's performance on holdouts will be suboptimal unless we strive to find the global optimum.
 
-In this repository, we present several examples illustrating our method for identifying immune traces that can serve as biomarkers. Each example is self-contained, complete with the associated datasets required to re-run the model. Our examples demonstrate the ability to:
+In this repository, we present several examples illustrating our method for identifying immune traces that can serve as biomarkers. Each example is self-contained, complete with the associated datasets required to re-run the model. Some results are successful, while others are not (perhps there are bugs in the code). Our examples demonstrate the ability to:
 * [distinguish malignant from non-malignant ovarian tissue](ovarian-cancer),
 * [diagnose breast cancer from peripheral blood](breast-cancer),
 * [predict clearance of preneoplastic cervical lesions](cervical-cancer),
