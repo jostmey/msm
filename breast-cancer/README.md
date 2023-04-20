@@ -1,8 +1,8 @@
 # Instructions
-This example illustrates how our method can be used to predict if a person is either “healthy” or has “cancer” from their peripheral blood. Each blood sample is from a different person.
+This example demonstrates the application of our method to predict whether an individual is "healthy" or affected by "cancer" based on their peripheral blood sample. Each sample is collected from a distinct individual.
 
 ## Dataset
-T cell receptors sequenced from 32 blood samples are in the folder `dataset`. Half of the samples are from healthy individuals and the other half are from breast cancer patients. Use the following commands to extract the data.
+The `dataset` folder contains T cell receptor sequences from 32 blood samples, with half of the samples originating from healthy individuals and the other half from breast cancer patients. To extract the data, utilize the commands provided below.
 ```
 cd dataset
 unzip '*.zip'
@@ -10,7 +10,7 @@ cd ../
 ```
 
 ## Modeling
-This model uses snippets from the T cell receptor sequences from peripheral blood to predict if the person is healthy or has breast cancer. The model is fit on data from many individuals. The performance of the model is evaluated using a patient-holdout cross-validation. During the cross-validation, data from an individual is held out during the fitting procedure. That individual is then used to determine how the model performs on an individual not used for fitting. Every individual gets a turn being held out, which is why we must fit the model anew each time an individual is held out. Use the following commands to run the cross-validation. The commands assume you are running the model on a CUDA enabled GPU with at least 11GB of memory.
+This model employs snippets derived from T cell receptor sequences in peripheral blood to predict whether an individual is healthy or has breast cancer. The model is trained on data from numerous individuals and its performance is assessed through patient-holdout cross-validation. During the cross-validation process, data from a single individual is withheld during the fitting procedure and subsequently used to evaluate the model's performance on data not included in the fitting. Each individual takes a turn as the holdout, necessitating the model to be refit each time a different individual is held out. To execute the cross-validation, use the following commands, which assume you are running the model on a CUDA-enabled GPU with a minimum of 11GB memory.
 ```
 mkdir -p bin
 python3 train_val.py --seed 1 --holdouts BR01B --num_fits 16384 --output bin/1
@@ -46,13 +46,13 @@ python3 train_val.py --seed 1 --holdouts HIP14045 --num_fits 16384 --output bin/
 python3 train_val.py --seed 1 --holdouts HIP14055 --num_fits 16384 --output bin/31
 python3 train_val.py --seed 1 --holdouts HIP14221 --num_fits 16384 --output bin/32
 ```
-The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --num_fits determines how many times to try and find the global best fit to the training data and has been reduced to allow the larger samples to fit into GPU memory. The fourth flag --output is the prefix for the filenames saved during the fitting procedure. An additional flag that can be used is --device for selecting `gpu` or `cpu`.
+The first flag --seed sets the seed value for generating the initial guess of the weight values. The second flag --holdouts specifies the sample to be held out. The third flag --num_fits determines the number of attempts to find the global best fit for the training data, and has been reduced to accommodate larger samples within GPU memory constraints. The fourth flag --output designates the prefix for filenames saved during the fitting procedure. An optional flag, --device, can be utilized to select either gpu or cpu for processing.
 
-## Model Customization
-This dataset combines individuals from two studies. The first study contains healthy individuals. The second study contains individuals with breast cancer. Healthy individuals were selected to be age and sex matched. 
+## How does this differ from the other examples in this repository?
+This dataset comprises individuals from two distinct studies. The first study focuses on healthy individuals, while the second study involves participants with breast cancer. The healthy individuals were chosen to ensure age and sex matching with the breast cancer patients.
 
 ## Evaluation
-After running each above command and completing the patient-holdout cross-validation, the results can be summarized using the following command.
+Upon executing each of the aforementioned commands and completing the patient-holdout cross-validation, you can consolidate the results using the command provided below.
 ```
 python3 report.py > report.csv
 ```
