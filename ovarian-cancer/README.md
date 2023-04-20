@@ -1,8 +1,8 @@
 # Instructions
-This example illustrates how our method can be used to predict if ovarian tissue is either “normal” or “malignant”. Each tissue sample is from a different person.
+This example demonstrates the application of our method to distinguish between normal and malignant ovarian tissue. Each tissue sample in the dataset is obtained from a different individual.
 
 ## Dataset
-T cell receptors sequenced from 20 ovarian tissue samples are in the folder `dataset`. Half of the samples are from normal tissue and the other half are from malignant tissue. Use the following commands to extract the data.
+T cell receptor sequences from 20 ovarian tissue samples are located in the dataset folder. The samples are evenly split, with half from normal tissue and half from malignant tissue. To extract the data, use the following commands.
 ```
 cd dataset
 unzip '*.zip'
@@ -10,7 +10,7 @@ cd ../
 ```
 
 ## Modeling
-This model uses snippets from the T cell receptor sequences from ovarian tissue to predict if the tissue is normal or malignant. The model is fit on data from many individuals. The performance of the model is evaluated using a patient-holdout cross-validation. During the cross-validation, data from an individual is held out during the fitting procedure. That individual is then used to determine how the model performs on an individual not used for fitting. Every individual gets a turn being held out, which is why we must fit the model anew each time an individual is held out. Use the following commands to run the cross-validation. The commands assume you are running the model on a CUDA enabled GPU with at least 11GB of memory.
+This model employs snippets from T cell receptor sequences in ovarian tissue samples to classify the tissue as either normal or malignant. It is trained on data from numerous individuals, and its performance is assessed using a patient-holdout cross-validation approach. During this process, data from one individual is withheld while fitting the model. Subsequently, the model's performance is evaluated on the withheld individual, who was not used during the fitting. This procedure is repeated for each individual in the dataset, requiring the model to be retrained each time. To execute the cross-validation, use the following commands, assuming the model is run on a CUDA-enabled GPU with a minimum of 11GB memory.
 ```
 mkdir -p bin
 python3 train_val.py --seed 1 --holdouts O-10M --output bin/1
@@ -34,13 +34,13 @@ python3 train_val.py --seed 1 --holdouts O-8N --output bin/18
 python3 train_val.py --seed 1 --holdouts O-9M --output bin/19
 python3 train_val.py --seed 1 --holdouts O-9N --output bin/20
 ```
-The first flag `--seed` determines the seed value used to generate the initial guess for the weight values. The second flag `--holdouts` determines the sample to holdout. The third flag --output is the prefix for the filenames saved during the fitting procedure. Additional flags that can be used are --num_fits for determining how many times to try and find the global best fit to the training data and --device for selecting `gpu` or `cpu`.
+The first flag --seed sets the seed value for generating the initial weight guesses. The second flag --holdouts specifies the sample to withhold during validation. The third flag --output defines the prefix for the filenames saved throughout the fitting process. Additional flags include --num_fits, which determines the number of attempts to find the global best fit for the training data, and --device, which allows you to select either gpu or cpu for processing.
 
-## Model Customization
-This model introduces the use of a gap in the snippet, which was found to improve performance on this dataset. Gaps are a concept from sequence alignment algorithms that allow spaces to be introduced between individual amino acid residues. The code for the gaps can be found on line 71 in `dataplumbing.py` and is used on line 58 in `train_val.py`. The value `motif_size` determines the number of amino acid residues in the snippet and the difference between `window_size` and `motif_size` determines the number of gaps.
+## How does this differ from the other examples in this repository?
+This model incorporates a gap feature within the snippet, which has been found to enhance performance for this dataset. Gaps, derived from sequence alignment algorithms, allow for spaces between individual amino acid residues. The gap implementation can be found in dataplumbing.py on line 71 and is utilized on line 58 in train_val.py. The motif_size value defines the number of amino acid residues in the snippet, while the difference between window_size and motif_size determines the number of gaps present.
 
 ## Evaluation
-After running each above command and completing the patient-holdout cross-validation, the results can be summarized using the following command.
+The results are stored in a CSV file that can be opened by your favorite spreadsheet viewer. There are nine columns that represent:
 ```
 python3 report.py > report.csv
 ```
