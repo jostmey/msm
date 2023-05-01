@@ -210,8 +210,8 @@ for epoch in range(0, num_epochs):
     es_block = w_block*loss(ls_block, ys_block)  # The loss function is calculated seperately for each fit
     as_block = w_block*accuracy(ls_block, ys_block)  # The binary accuracy is calculated seperate for each fit
 
-    es_train += es_block
-    as_train += as_block
+    es_train += es_block.detach()
+    as_train += as_block.detach()
 
     e_block = torch.sum(es_block)
     e_block.backward()
@@ -235,8 +235,8 @@ for epoch in range(0, num_epochs):
       es_block = w_block*loss(ls_block, ys_block)  # The loss function is calculated seperately for each fit
       as_block = w_block*accuracy(ls_block, ys_block)  # The binary accuracy is calculated seperate for each fit
 
-      es_val += es_block
-      as_val += as_block
+      es_val += es_block.detach()
+      as_val += as_block.detach()
 
   # Print report
   #
